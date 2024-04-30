@@ -1,0 +1,18 @@
+{
+  "inputs" : {
+    "method" : "POST",
+    "schema" : {
+      "properties" : {
+        "month" : {
+          "type" : "integer"
+        },
+        "year" : {
+          "type" : "integer"
+        }
+      },
+      "type" : "object"
+    }
+  },
+  "kind" : "Http",
+  "type" : "Request"
+}
