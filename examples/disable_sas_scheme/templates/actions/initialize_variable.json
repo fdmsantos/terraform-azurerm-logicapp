@@ -1,0 +1,12 @@
+{
+  "inputs": {
+    "variables": [
+      {
+        "name": "ProcessedFiles",
+        "type": "array"
+      }
+    ]
+  },
+  "runAfter": {},
+  "type": "InitializeVariable"
+}

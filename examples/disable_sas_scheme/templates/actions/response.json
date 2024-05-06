@@ -1,0 +1,15 @@
+{
+  "inputs": {
+    "body": {
+      "processed_files": "@variables('ProcessedFiles')"
+    },
+    "statusCode": 201
+  },
+  "kind": "Http",
+  "runAfter": {
+    "Initialize_variable": [
+      "Succeeded"
+    ]
+  },
+  "type": "Response"
+}

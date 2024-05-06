@@ -1,3 +1,9 @@
+data "http" "myip" {
+  url = "https://ipv4.icanhazip.com"
+}
+
+data "azurerm_client_config" "current" {}
+
 resource "azurerm_resource_group" "this" {
   name     = "RG-${title(var.name)}"
   location = var.location
@@ -19,6 +25,22 @@ module "logic_app" {
       defaultValue : "storageaccountname"
     }
   }
+  actions_allowed_caller_ip_address_range             = ["${chomp(data.http.myip.response_body)}/32"]
+  triggers_allowed_caller_ip_address_range            = ["${chomp(data.http.myip.response_body)}/32"]
+  contents_allowed_caller_ip_address_range            = ["${chomp(data.http.myip.response_body)}/32"]
+  workflow_management_allowed_caller_ip_address_range = ["${chomp(data.http.myip.response_body)}/32"]
+  authentication_policies = {
+    test-policy : [
+      {
+        claim_name : "Issuer",
+        claim_value : "https://sts.windows.net/${data.azurerm_client_config.current.tenant_id}"
+      },
+      {
+        claim_name : "DummyClaim",
+        claim_value : "Dummy Value"
+      },
+    ]
+  }
   http_triggers = {
     "HTTP_Trigger" = {
       method = "POST",
@@ -37,14 +59,14 @@ module "logic_app" {
   custom_triggers = {
     custom = {
       body = <<BODY
-{
-  "recurrence": {
-    "frequency": "Day",
-    "interval": 1
-  },
-  "type": "Recurrence"
-}
-BODY
+  {
+    "recurrence": {
+      "frequency": "Day",
+      "interval": 1
+    },
+    "type": "Recurrence"
+  }
+  BODY
     }
   }
   custom_actions = {

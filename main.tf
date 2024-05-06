@@ -14,7 +14,45 @@ resource "azurerm_logic_app_workflow" "workflow" {
       type         = var.identity_type == "BOTH" ? "SystemAssigned, UserAssigned" : var.identity_type
       identity_ids = var.identity_ids
     }
-
+  }
+  access_control {
+    dynamic "action" {
+      for_each = length(var.actions_allowed_caller_ip_address_range) > 0 ? [1] : []
+      content {
+        allowed_caller_ip_address_range = var.actions_allowed_caller_ip_address_range
+      }
+    }
+    dynamic "trigger" {
+      for_each = length(var.triggers_allowed_caller_ip_address_range) > 0 || length(keys(var.authentication_policies)) > 0 ? [1] : []
+      content {
+        allowed_caller_ip_address_range = var.triggers_allowed_caller_ip_address_range
+        dynamic "open_authentication_policy" {
+          for_each = var.authentication_policies
+          content {
+            name = open_authentication_policy.key
+            dynamic "claim" {
+              for_each = open_authentication_policy.value
+              content {
+                name  = try(local.standard_claims[claim.value.claim_name], claim.value.claim_name)
+                value = claim.value.claim_value
+              }
+            }
+          }
+        }
+      }
+    }
+    dynamic "content" {
+      for_each = length(var.contents_allowed_caller_ip_address_range) > 0 ? [1] : []
+      content {
+        allowed_caller_ip_address_range = var.contents_allowed_caller_ip_address_range
+      }
+    }
+    dynamic "workflow_management" {
+      for_each = length(var.workflow_management_allowed_caller_ip_address_range) > 0 ? [1] : []
+      content {
+        allowed_caller_ip_address_range = var.workflow_management_allowed_caller_ip_address_range
+      }
+    }
   }
   enabled = var.enabled
   tags    = var.tags
@@ -49,11 +87,10 @@ resource "azurerm_logic_app_trigger_recurrence" "this" {
 }
 
 resource "azurerm_logic_app_trigger_custom" "this" {
-  for_each     = var.custom_triggers
+  for_each     = local.custom_triggers
   name         = each.key
   logic_app_id = local.logic_app_id
   body         = each.value["body"]
-
 }
 
 ################## Actions #################

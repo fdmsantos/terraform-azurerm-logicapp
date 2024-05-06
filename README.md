@@ -9,6 +9,7 @@ Dynamic Terraform module, which creates a Logic App and others resources.
 * [Module versioning rule](README.md#module-versioning-rule)
 * [How to Use](README.md#how-to-use)
     * [Basic](README.md#basic)
+    * [Disable SAS Scheme](README.md#disable-sas-scheme)
 * [Examples](README.md#examples)
 * [Requirements](README.md#requirements)
 * [Providers](README.md#providers)
@@ -67,9 +68,17 @@ module "logic_app" {
 }
 ```
 
+### Disable SAS Scheme
+
+* Configuring `authentication_policies` doesn't disable the Shared Access Signature (SAS) Scheme.
+* To Disable the SAS scheme it's necessary create condition on http trigger. When `disable_sas_auth_schema` set it to true, will create this condition on http trigger.
+* Due `azurerm_logic_app_workflow` resource limitations, this is only supported in http and webhook triggers configured using `custom_triggers`. Please check the following [example](https://github.com/fdmsantos/terraform-azurerm-logicapp/tree/main/examples/disable_sas_scheme) to more info.
+
 ## Examples
 
-- [complete](https://github.com/fdmsantos/terraform-azurerm-logicapp/tree/main/examples/complete) - Creates Logic App with all supported features.
+- [Complete](https://github.com/fdmsantos/terraform-azurerm-logicapp/tree/main/examples/complete) - Creates Logic App with all supported features.
+- [Basic](https://github.com/fdmsantos/terraform-azurerm-logicapp/tree/main/examples/basic) - Creates Simple Logic App.
+- [Disable SAS Scheme](https://github.com/fdmsantos/terraform-azurerm-logicapp/tree/main/examples/disable_sas_scheme) - Create Logic App with Microsoft Entra ID OAuth as the only option to call a request endpoint.
 
 <!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 ## Requirements
@@ -103,9 +112,13 @@ No modules.
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
+| <a name="input_actions_allowed_caller_ip_address_range"></a> [actions\_allowed\_caller\_ip\_address\_range](#input\_actions\_allowed\_caller\_ip\_address\_range) | Restrict calls to triggers in this logic app to the provided IP ranges. IP addresses can be either IPv4 or IPv6 and accepts range and bitmask range formats. | `list(string)` | `[]` | no |
+| <a name="input_authentication_policies"></a> [authentication\_policies](#input\_authentication\_policies) | Map of authentication policies to apply in this Logic app. | <pre>map(list(object({<br>    claim_name  = string<br>    claim_value = string<br>  })))</pre> | `{}` | no |
 | <a name="input_connections_parameters"></a> [connections\_parameters](#input\_connections\_parameters) | Parameters related with API Connections. | `list(map(any))` | `[]` | no |
+| <a name="input_contents_allowed_caller_ip_address_range"></a> [contents\_allowed\_caller\_ip\_address\_range](#input\_contents\_allowed\_caller\_ip\_address\_range) | Restrict calls to get input and output messages from run history to the provided IP ranges. IP addresses can be either IPv4 or IPv6 and accepts range and bitmask range formats. | `list(string)` | `[]` | no |
 | <a name="input_custom_actions"></a> [custom\_actions](#input\_custom\_actions) | Map of Logic App Custom Actions. | `map(string)` | `{}` | no |
 | <a name="input_custom_triggers"></a> [custom\_triggers](#input\_custom\_triggers) | Map of Custom Triggers. | <pre>map(object({<br>    body = string<br>  }))</pre> | `{}` | no |
+| <a name="input_disable_sas_auth_schema"></a> [disable\_sas\_auth\_schema](#input\_disable\_sas\_auth\_schema) | This will create an condition on Http Triggers to enable the request be only from Microsoft Entra ID. Only Supports HTTP Triggers Configured via Custom Triggers and only makes sense when authentication\_policies are configured. | `bool` | `false` | no |
 | <a name="input_enabled"></a> [enabled](#input\_enabled) | Is the Logic App enabled? Defaults to true | `bool` | `true` | no |
 | <a name="input_http_triggers"></a> [http\_triggers](#input\_http\_triggers) | Map of Logic App HTTP Triggers. | <pre>map(object({<br>    schema        = string<br>    method        = optional(string, null)<br>    relative_path = optional(string, null)<br>  }))</pre> | `{}` | no |
 | <a name="input_identity_ids"></a> [identity\_ids](#input\_identity\_ids) | Specifies a list of User Assigned Managed Identity IDs to be assigned to this Logic App. | `list(string)` | `[]` | no |
@@ -118,7 +131,9 @@ No modules.
 | <a name="input_recurrence_triggers"></a> [recurrence\_triggers](#input\_recurrence\_triggers) | Map of Logic App Recurrence Triggers. | <pre>map(object({<br>    frequency        = string<br>    interval         = number<br>    start_time       = optional(string, null)<br>    time_zone        = optional(string, null)<br>    at_these_minutes = optional(list(number), [])<br>    at_these_hours   = optional(list(number), [])<br>    on_these_days    = optional(list(string), [])<br>  }))</pre> | `{}` | no |
 | <a name="input_resource_group_name"></a> [resource\_group\_name](#input\_resource\_group\_name) | Specifies the name of the Resource Group where the logic should exists. Changing this forces a new resource to be created. | `string` | n/a | yes |
 | <a name="input_tags"></a> [tags](#input\_tags) | A map of tags to assign to resources. | `map(string)` | `{}` | no |
-| <a name="input_workflow_parameters"></a> [workflow\_parameters](#input\_workflow\_parameters) | Specifies a map of Key-Value pairs of the Parameter Definitions to use for this Logic App Workflow. The key is the parameter name, and the value is a JSON encoded string of the parameter definition (see: https://docs.microsoft.com/azure/logic-apps/logic-apps-workflow-definition-language#parameters). | <pre>map(object({<br>    type          = string<br>    defaultValue  = any<br>    allowedValues = optional(list(string), null)<br>    metadata = optional(object({<br>      description = string<br>    }))<br>  }))</pre> | `{}` | no |
+| <a name="input_triggers_allowed_caller_ip_address_range"></a> [triggers\_allowed\_caller\_ip\_address\_range](#input\_triggers\_allowed\_caller\_ip\_address\_range) | Restrict calls to triggers in this logic app to the provided IP ranges. IP addresses can be either IPv4 or IPv6 and accepts range and bitmask range formats. | `list(string)` | `[]` | no |
+| <a name="input_workflow_management_allowed_caller_ip_address_range"></a> [workflow\_management\_allowed\_caller\_ip\_address\_range](#input\_workflow\_management\_allowed\_caller\_ip\_address\_range) | Restrict workflow management in this logic app to the provided IP ranges. IP addresses can be either IPv4 or IPv6 and accepts range and bitmask range formats. | `list(string)` | `[]` | no |
+| <a name="input_workflow_parameters"></a> [workflow\_parameters](#input\_workflow\_parameters) | Specifies a map of Key-Value pairs of the Parameter Definitions to use for this Logic App Workflow. The key is the parameter name, and the value is a JSON encoded string of the parameter definition (see: https://docs.microsoft.com/azure/logic-apps/logic-apps-workflow-definition-language#parameters). | <pre>map(object({<br>    type          = string<br>    defaultValue  = any<br>    allowedValues = optional(list(string), [])<br>    metadata = optional(object({<br>      description = optional(string, null)<br>    }), {})<br>  }))</pre> | `{}` | no |
 | <a name="input_workflow_schema"></a> [workflow\_schema](#input\_workflow\_schema) | Specifies the Schema to use for this Logic App Workflow. Defaults to https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json# | `string` | `"https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#"` | no |
 | <a name="input_workflow_version"></a> [workflow\_version](#input\_workflow\_version) | Specifies the version of the Schema used for this Logic App Workflow. Defaults to 1.0.0.0. Changing this forces a new resource to be created. | `string` | `"1.0.0.0"` | no |
 

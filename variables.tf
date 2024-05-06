@@ -49,7 +49,48 @@ variable "workflow_version" {
   default     = "1.0.0.0"
 }
 
-######### Identity #########
+######################## Workflow Settings ########################
+variable "triggers_allowed_caller_ip_address_range" {
+  description = "Restrict calls to triggers in this logic app to the provided IP ranges. IP addresses can be either IPv4 or IPv6 and accepts range and bitmask range formats."
+  type        = list(string)
+  default     = []
+}
+
+variable "contents_allowed_caller_ip_address_range" {
+  description = "Restrict calls to get input and output messages from run history to the provided IP ranges. IP addresses can be either IPv4 or IPv6 and accepts range and bitmask range formats."
+  type        = list(string)
+  default     = []
+}
+
+variable "actions_allowed_caller_ip_address_range" {
+  description = "Restrict calls to triggers in this logic app to the provided IP ranges. IP addresses can be either IPv4 or IPv6 and accepts range and bitmask range formats."
+  type        = list(string)
+  default     = []
+}
+
+variable "workflow_management_allowed_caller_ip_address_range" {
+  description = "Restrict workflow management in this logic app to the provided IP ranges. IP addresses can be either IPv4 or IPv6 and accepts range and bitmask range formats."
+  type        = list(string)
+  default     = []
+}
+
+######################## Authorization ########################
+variable "authentication_policies" {
+  description = "Map of authentication policies to apply in this Logic app."
+  type = map(list(object({
+    claim_name  = string
+    claim_value = string
+  })))
+  default = {}
+}
+
+variable "disable_sas_auth_schema" {
+  description = "This will create an condition on Http Triggers to enable the request be only from Microsoft Entra ID. Only Supports HTTP Triggers Configured via Custom Triggers and only makes sense when authentication_policies are configured."
+  type        = bool
+  default     = false
+}
+
+######################## Identity ########################
 variable "identity_type" {
   description = "Specifies the type of Managed Service Identity that should be associated with this Logic App."
   type        = string
@@ -87,7 +128,7 @@ variable "workflow_parameters" {
     allowedValues = optional(list(string), [])
     metadata = optional(object({
       description = optional(string, null)
-    }), { })
+    }), {})
   }))
   default = {}
 }
