@@ -55,3 +55,13 @@ output "recurrence_triggers" {
     }
   }
 }
+
+output "custom_triggers" {
+  description = "Logic App Custom Triggers."
+  value = {
+    for name, trigger in azurerm_logic_app_trigger_custom.this :
+    name => {
+      id = trigger.id
+    }
+  }
+}

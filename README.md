@@ -94,6 +94,7 @@ No modules.
 | Name | Type |
 |------|------|
 | [azurerm_logic_app_action_custom.this](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/logic_app_action_custom) | resource |
+| [azurerm_logic_app_trigger_custom.this](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/logic_app_trigger_custom) | resource |
 | [azurerm_logic_app_trigger_http_request.this](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/logic_app_trigger_http_request) | resource |
 | [azurerm_logic_app_trigger_recurrence.this](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/logic_app_trigger_recurrence) | resource |
 | [azurerm_logic_app_workflow.workflow](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/logic_app_workflow) | resource |
@@ -104,6 +105,7 @@ No modules.
 |------|-------------|------|---------|:--------:|
 | <a name="input_connections_parameters"></a> [connections\_parameters](#input\_connections\_parameters) | Parameters related with API Connections. | `list(map(any))` | `[]` | no |
 | <a name="input_custom_actions"></a> [custom\_actions](#input\_custom\_actions) | Map of Logic App Custom Actions. | `map(string)` | `{}` | no |
+| <a name="input_custom_triggers"></a> [custom\_triggers](#input\_custom\_triggers) | Map of Custom Triggers. | <pre>map(object({<br>    body = string<br>  }))</pre> | `{}` | no |
 | <a name="input_enabled"></a> [enabled](#input\_enabled) | Is the Logic App enabled? Defaults to true | `bool` | `true` | no |
 | <a name="input_http_triggers"></a> [http\_triggers](#input\_http\_triggers) | Map of Logic App HTTP Triggers. | <pre>map(object({<br>    schema        = string<br>    method        = optional(string, null)<br>    relative_path = optional(string, null)<br>  }))</pre> | `{}` | no |
 | <a name="input_identity_ids"></a> [identity\_ids](#input\_identity\_ids) | Specifies a list of User Assigned Managed Identity IDs to be assigned to this Logic App. | `list(string)` | `[]` | no |
@@ -127,6 +129,7 @@ No modules.
 | <a name="output_access_endpoint"></a> [access\_endpoint](#output\_access\_endpoint) | The Access Endpoint for the Logic App Workflow. |
 | <a name="output_connector_endpoint_ip_addresses"></a> [connector\_endpoint\_ip\_addresses](#output\_connector\_endpoint\_ip\_addresses) | The list of access endpoint IP addresses of connector for the Logic App Workflow. |
 | <a name="output_connector_outbound_ip_addresses"></a> [connector\_outbound\_ip\_addresses](#output\_connector\_outbound\_ip\_addresses) | The list of outgoing IP addresses of connector for the Logic App Workflow. |
+| <a name="output_custom_triggers"></a> [custom\_triggers](#output\_custom\_triggers) | Logic App Custom Triggers. |
 | <a name="output_http_triggers"></a> [http\_triggers](#output\_http\_triggers) | Logic App Http Triggers. |
 | <a name="output_id"></a> [id](#output\_id) | The Logic App ID. |
 | <a name="output_identity"></a> [identity](#output\_identity) | Logic App Identity |

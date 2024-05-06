@@ -117,6 +117,14 @@ variable "recurrence_triggers" {
   default = {}
 }
 
+variable "custom_triggers" {
+  description = "Map of Custom Triggers."
+  type = map(object({
+    body = string
+  }))
+  default = {}
+}
+
 ######################## Actions ########################
 variable "custom_actions" {
   description = "Map of Logic App Custom Actions."

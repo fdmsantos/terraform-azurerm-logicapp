@@ -34,6 +34,19 @@ module "logic_app" {
       at_these_hours   = [0, 12]
     }
   }
+  custom_triggers = {
+    custom = {
+      body = <<BODY
+{
+  "recurrence": {
+    "frequency": "Day",
+    "interval": 1
+  },
+  "type": "Recurrence"
+}
+BODY
+    }
+  }
   custom_actions = {
     "Initialize_variable" : file("${path.module}/templates/actions/initialize_variable.json")
     #     "Response" : file("${path.module}/templates/actions/response.json") # Does Not work with Recurrence Trigger

@@ -12,3 +12,8 @@ output "recurrence_triggers" {
   description = "Recurrence Triggers."
   value       = module.logic_app.recurrence_triggers
 }
+
+output "custom_triggers" {
+  description = "Custom Triggers."
+  value       = module.logic_app.custom_triggers
+}

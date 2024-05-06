@@ -48,6 +48,14 @@ resource "azurerm_logic_app_trigger_recurrence" "this" {
   }
 }
 
+resource "azurerm_logic_app_trigger_custom" "this" {
+  for_each     = var.custom_triggers
+  name         = each.key
+  logic_app_id = local.logic_app_id
+  body         = each.value["body"]
+
+}
+
 ################## Actions #################
 resource "azurerm_logic_app_action_custom" "this" {
   for_each     = var.custom_actions
