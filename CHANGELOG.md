@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.2.0](https://github.com/fdmsantos/terraform-azurerm-logicapp/compare/v1.1.0...v1.2.0) (2024-05-06)
+
+
+### Features
+
+* Add Access control block ([0920184](https://github.com/fdmsantos/terraform-azurerm-logicapp/commit/092018487b82a1e3a71e0b431ecc65188c81d63a))
+
 ## [1.1.0](https://github.com/fdmsantos/terraform-azurerm-logicapp/compare/v1.0.0...v1.1.0) (2024-05-06)
 
 
