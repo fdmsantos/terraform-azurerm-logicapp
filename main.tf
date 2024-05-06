@@ -20,6 +20,7 @@ resource "azurerm_logic_app_workflow" "workflow" {
   tags    = var.tags
 }
 
+################## Triggers #################
 resource "azurerm_logic_app_trigger_http_request" "this" {
   for_each      = var.http_triggers
   name          = each.key
@@ -29,6 +30,25 @@ resource "azurerm_logic_app_trigger_http_request" "this" {
   relative_path = each.value["relative_path"]
 }
 
+resource "azurerm_logic_app_trigger_recurrence" "this" {
+  for_each     = var.recurrence_triggers
+  name         = each.key
+  logic_app_id = local.logic_app_id
+  frequency    = each.value["frequency"]
+  interval     = each.value["interval"]
+  start_time   = each.value["start_time"]
+  time_zone    = each.value["time_zone"]
+  dynamic "schedule" {
+    for_each = max(length(each.value["at_these_hours"]), length(each.value["at_these_minutes"]), length(each.value["on_these_days"])) > 0 ? [1] : [0]
+    content {
+      at_these_minutes = each.value["at_these_minutes"]
+      at_these_hours   = each.value["at_these_hours"]
+      on_these_days    = each.value["on_these_days"]
+    }
+  }
+}
+
+################## Actions #################
 resource "azurerm_logic_app_action_custom" "this" {
   for_each     = var.custom_actions
   name         = each.key

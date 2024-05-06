@@ -100,12 +100,26 @@ variable "http_triggers" {
     method        = optional(string, null)
     relative_path = optional(string, null)
   }))
-  default = null
+  default = {}
+}
+
+variable "recurrence_triggers" {
+  description = "Map of Logic App Recurrence Triggers."
+  type = map(object({
+    frequency        = string
+    interval         = number
+    start_time       = optional(string, null)
+    time_zone        = optional(string, null)
+    at_these_minutes = optional(list(number), [])
+    at_these_hours   = optional(list(number), [])
+    on_these_days    = optional(list(string), [])
+  }))
+  default = {}
 }
 
 ######################## Actions ########################
 variable "custom_actions" {
   description = "Map of Logic App Custom Actions."
   type        = map(string)
-  default     = null
+  default     = {}
 }

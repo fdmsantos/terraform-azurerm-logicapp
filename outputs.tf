@@ -33,3 +33,25 @@ output "workflow_outbound_ip_addresses" {
   description = "The list of outgoing IP addresses of workflow for the Logic App Workflow."
   value       = azurerm_logic_app_workflow.workflow.workflow_outbound_ip_addresses
 }
+
+######################## Triggers ########################
+output "http_triggers" {
+  description = "Logic App Http Triggers."
+  value = {
+    for name, trigger in azurerm_logic_app_trigger_http_request.this :
+    name => {
+      id       = trigger.id
+      callback = trigger.callback_url
+    }
+  }
+}
+
+output "recurrence_triggers" {
+  description = "Logic App Recurrence Triggers."
+  value = {
+    for name, trigger in azurerm_logic_app_trigger_recurrence.this :
+    name => {
+      id = trigger.id
+    }
+  }
+}

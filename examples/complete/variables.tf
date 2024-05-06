@@ -1,6 +1,7 @@
 variable "name" {
   description = "Specifies the name of resource group."
   type        = string
+  default     = "logic-app-demo"
 }
 
 variable "location" {

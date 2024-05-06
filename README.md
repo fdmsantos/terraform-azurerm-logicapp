@@ -52,9 +52,14 @@ module "logic_app" {
       schema = file("${path.module}/templates/triggers/http_trigger.json")
     }
   }
+  recurrence_triggers = {
+    run-every-day = {
+      frequency        = "Day"
+      interval         = 1
+    }
+  }
   custom_actions = {
     "Initialize_variable" : file("${path.module}/templates/actions/initialize_variable.json")
-    "Response" : file("${path.module}/templates/actions/response.json")
   }
   tags = {
     env: "dev"
@@ -90,6 +95,7 @@ No modules.
 |------|------|
 | [azurerm_logic_app_action_custom.this](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/logic_app_action_custom) | resource |
 | [azurerm_logic_app_trigger_http_request.this](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/logic_app_trigger_http_request) | resource |
+| [azurerm_logic_app_trigger_recurrence.this](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/logic_app_trigger_recurrence) | resource |
 | [azurerm_logic_app_workflow.workflow](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/logic_app_workflow) | resource |
 
 ## Inputs
@@ -97,9 +103,9 @@ No modules.
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
 | <a name="input_connections_parameters"></a> [connections\_parameters](#input\_connections\_parameters) | Parameters related with API Connections. | `list(map(any))` | `[]` | no |
-| <a name="input_custom_actions"></a> [custom\_actions](#input\_custom\_actions) | Map of Logic App Custom Actions. | `map(string)` | `null` | no |
+| <a name="input_custom_actions"></a> [custom\_actions](#input\_custom\_actions) | Map of Logic App Custom Actions. | `map(string)` | `{}` | no |
 | <a name="input_enabled"></a> [enabled](#input\_enabled) | Is the Logic App enabled? Defaults to true | `bool` | `true` | no |
-| <a name="input_http_triggers"></a> [http\_triggers](#input\_http\_triggers) | Map of Logic App HTTP Triggers. | <pre>map(object({<br>    schema        = string<br>    method        = optional(string, null)<br>    relative_path = optional(string, null)<br>  }))</pre> | `null` | no |
+| <a name="input_http_triggers"></a> [http\_triggers](#input\_http\_triggers) | Map of Logic App HTTP Triggers. | <pre>map(object({<br>    schema        = string<br>    method        = optional(string, null)<br>    relative_path = optional(string, null)<br>  }))</pre> | `{}` | no |
 | <a name="input_identity_ids"></a> [identity\_ids](#input\_identity\_ids) | Specifies a list of User Assigned Managed Identity IDs to be assigned to this Logic App. | `list(string)` | `[]` | no |
 | <a name="input_identity_type"></a> [identity\_type](#input\_identity\_type) | Specifies the type of Managed Service Identity that should be associated with this Logic App. | `string` | `null` | no |
 | <a name="input_integration_service_environment_id"></a> [integration\_service\_environment\_id](#input\_integration\_service\_environment\_id) | The ID of the Integration Service Environment to which this Logic App Workflow belongs. Changing this forces a new Logic App Workflow to be created. | `string` | `null` | no |
@@ -107,6 +113,7 @@ No modules.
 | <a name="input_logic_app_integration_account_id"></a> [logic\_app\_integration\_account\_id](#input\_logic\_app\_integration\_account\_id) | The ID of the integration account linked by this Logic App Workflow. | `string` | `null` | no |
 | <a name="input_name"></a> [name](#input\_name) | Specifies the name of the Logic App. Changing this forces a new resource to be created. | `string` | n/a | yes |
 | <a name="input_parameters"></a> [parameters](#input\_parameters) | A map of Key-Value pairs. Any parameters specified must exist in the Schema defined in workflow\_parameters. | `map(any)` | `{}` | no |
+| <a name="input_recurrence_triggers"></a> [recurrence\_triggers](#input\_recurrence\_triggers) | Map of Logic App Recurrence Triggers. | <pre>map(object({<br>    frequency        = string<br>    interval         = number<br>    start_time       = optional(string, null)<br>    time_zone        = optional(string, null)<br>    at_these_minutes = optional(list(number), [])<br>    at_these_hours   = optional(list(number), [])<br>    on_these_days    = optional(list(string), [])<br>  }))</pre> | `{}` | no |
 | <a name="input_resource_group_name"></a> [resource\_group\_name](#input\_resource\_group\_name) | Specifies the name of the Resource Group where the logic should exists. Changing this forces a new resource to be created. | `string` | n/a | yes |
 | <a name="input_tags"></a> [tags](#input\_tags) | A map of tags to assign to resources. | `map(string)` | `{}` | no |
 | <a name="input_workflow_parameters"></a> [workflow\_parameters](#input\_workflow\_parameters) | Specifies a map of Key-Value pairs of the Parameter Definitions to use for this Logic App Workflow. The key is the parameter name, and the value is a JSON encoded string of the parameter definition (see: https://docs.microsoft.com/azure/logic-apps/logic-apps-workflow-definition-language#parameters). | <pre>map(object({<br>    type          = string<br>    defaultValue  = any<br>    allowedValues = optional(list(string), null)<br>    metadata = optional(object({<br>      description = string<br>    }))<br>  }))</pre> | `{}` | no |
@@ -120,8 +127,10 @@ No modules.
 | <a name="output_access_endpoint"></a> [access\_endpoint](#output\_access\_endpoint) | The Access Endpoint for the Logic App Workflow. |
 | <a name="output_connector_endpoint_ip_addresses"></a> [connector\_endpoint\_ip\_addresses](#output\_connector\_endpoint\_ip\_addresses) | The list of access endpoint IP addresses of connector for the Logic App Workflow. |
 | <a name="output_connector_outbound_ip_addresses"></a> [connector\_outbound\_ip\_addresses](#output\_connector\_outbound\_ip\_addresses) | The list of outgoing IP addresses of connector for the Logic App Workflow. |
+| <a name="output_http_triggers"></a> [http\_triggers](#output\_http\_triggers) | Logic App Http Triggers. |
 | <a name="output_id"></a> [id](#output\_id) | The Logic App ID. |
 | <a name="output_identity"></a> [identity](#output\_identity) | Logic App Identity |
+| <a name="output_recurrence_triggers"></a> [recurrence\_triggers](#output\_recurrence\_triggers) | Logic App Recurrence Triggers. |
 | <a name="output_workflow_endpoint_ip_addresses"></a> [workflow\_endpoint\_ip\_addresses](#output\_workflow\_endpoint\_ip\_addresses) | The list of access endpoint IP addresses of workflow for the Logic App Workflow. |
 | <a name="output_workflow_outbound_ip_addresses"></a> [workflow\_outbound\_ip\_addresses](#output\_workflow\_outbound\_ip\_addresses) | The list of outgoing IP addresses of workflow for the Logic App Workflow. |
 <!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->

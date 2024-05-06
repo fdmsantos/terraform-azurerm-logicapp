@@ -25,9 +25,18 @@ module "logic_app" {
       schema = file("${path.module}/templates/triggers/http_trigger.json")
     }
   }
+  recurrence_triggers = {
+    run-every-day = {
+      frequency        = "Day"
+      interval         = 1
+      time_zone        = "GMT Standard Time"
+      at_these_minutes = [0, 30]
+      at_these_hours   = [0, 12]
+    }
+  }
   custom_actions = {
     "Initialize_variable" : file("${path.module}/templates/actions/initialize_variable.json")
-    "Response" : file("${path.module}/templates/actions/response.json")
+    #     "Response" : file("${path.module}/templates/actions/response.json") # Does Not work with Recurrence Trigger
   }
   tags = {
     env : "dev"
