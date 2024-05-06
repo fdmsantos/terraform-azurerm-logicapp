@@ -84,10 +84,10 @@ variable "workflow_parameters" {
   type = map(object({
     type          = string
     defaultValue  = any
-    allowedValues = optional(list(string), null)
+    allowedValues = optional(list(string), [])
     metadata = optional(object({
-      description = string
-    }))
+      description = optional(string, null)
+    }), { })
   }))
   default = {}
 }
